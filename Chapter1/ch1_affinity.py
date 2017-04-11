@@ -1,4 +1,3 @@
-print("Hello, World!")
 import numpy as np
 dataset_filename = "affinity_dataset.txt" 
 X = np.loadtxt(dataset_filename)
@@ -58,6 +57,7 @@ for sample in X:
                 # This person bought the premise, but not the conclusion
                 invalid_rules[(premise, conclusion)] += 1
 support = valid_rules
+
 confidence = defaultdict(float)
 for premise, conclusion in valid_rules.keys():
     confidence[(premise, conclusion)] = valid_rules[(premise, conclusion)] / num_occurences[premise]
@@ -67,6 +67,23 @@ for premise, conclusion in confidence:
     conclusion_name = features[conclusion]
     print("Rule: If a person buys {0} they will also buy {1}".format(premise_name, conclusion_name))
     print(" - Confidence: {0:.3f}".format(confidence[(premise, conclusion)]))
-    print(" - Support: {0}".format(support[(premise, conclusion)]))
-    print("")
+    print(" - Support: {0}\n".format(support[(premise, conclusion)]))
 
+def print_rule(premise, conclusion, support, confidence, features):
+    premise_name = features[premise]
+    conclusion_name = features[conclusion]
+    print("Rule: If a person buys {0} they will also buy {1}".format(premise_name, conclusion_name))
+    print(" - Confidence: {0:.3f}".format(confidence[(premise, conclusion)]))
+    print(" - Support: {0} \n".format(support[(premise, conclusion)]))
+
+print("-------------------------------")
+premise = 1
+conclusion = 3
+print_rule(premise, conclusion, support, confidence, features)
+
+# Sort by support
+from pprint import pprint
+pprint(list(support.items()))
+
+from operator import itemgetter
+sorted_support = sorted(support.items(), key=itemgetter(1), reverse=True)
